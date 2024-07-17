@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify
-import subprocess
-import threading
 import logging
 import configuration as config
 
@@ -11,7 +9,7 @@ app = Flask(__name__)
 def health():
     return "Working!"
 
-def run_ilab_command(endpoint_url, model_family, num_instructions, model):
+def sdg(endpoint_url, model_family, num_instructions, model):
     from instructlab.sdg.generate_data import generate_data
     from instructlab.sdg.utils import GenerateException
 
@@ -50,27 +48,21 @@ def run_ilab_command(endpoint_url, model_family, num_instructions, model):
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    # Check if the request contains JSON
     if not request.is_json:
         return jsonify({"error": "Request must be JSON"}), 400
-    
-    # Parse the JSON payload
+
     data = request.get_json()
     
-    # Extract required fields
     endpoint_url = data.get('endpoint_url')
     model_family = data.get('model_family')
     num_instructions = data.get('num_instructions')
     model = data.get('model')
     
-    # Validate the fields
     if not endpoint_url or not model_family or not num_instructions or not model:
         return jsonify({"error": "Missing required fields"}), 400
     
-    # Start the command in a new thread
-    thread = threading.Thread(target=run_ilab_command, args=(endpoint_url, model_family, num_instructions, model))
-    thread.start()
-    
+    sdg(endpoint_url, model_family, num_instructions, model)
+
     return jsonify({"message": "Started generating SGD data"}), 200
 
 if __name__ == '__main__':
