@@ -14,4 +14,4 @@ RUN git clone https://github.com/instructlab/taxonomy.git /app/taxonomy
 EXPOSE 5000
 
 # Run the application
-CMD ["python", "./app.py"]
+CMD ["flask", "run"]

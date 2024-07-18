@@ -65,7 +65,6 @@ def generate():
 
     return jsonify({"message": "Started generating SGD data"}), 200
 
-if __name__ == '__main__':
-    from waitress import serve;
-    print("Server started!")
-    serve(app, host="0.0.0.0", port=8080)
+# if __name__ == '__main__':
+#     print("Server started!")
+#     serve(app, host="0.0.0.0", port=8080)
