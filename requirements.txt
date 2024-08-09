@@ -1,4 +1,6 @@
 Flask==3.0.3
 instructlab==0.17.1
 instructlab-sdg==0.1.0
+# instructlab==0.18.0rc4
+# instructlab-sdg==0.2.4
 waitress==3.0.0

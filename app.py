@@ -1,25 +1,28 @@
 from flask import Flask, request, jsonify
 import logging
 import configuration as config
+from instructlab.sdg.generate_data import generate_data
+from instructlab.sdg.utils import GenerateException
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.DEBUG)
+
 app = Flask(__name__)
+
 
 @app.route('/')
 def health():
     return "Working!"
 
+
 def sdg(endpoint_url, model_family, num_instructions, model):
-    from instructlab.sdg.generate_data import generate_data
-    from instructlab.sdg.utils import GenerateException
 
     try:
         print(
-            f"Generating synthetic data using '{model}' model, taxonomy:'{config.DEFAULT_TAXONOMY_PATH}' against {endpoint_url} server"
+            f"Generating synthetic data using '{model}' model, taxonomy:'{config.DEFAULT_TAXONOMY_PATH}' against "
+            f"{endpoint_url} server"
         )
+
         generate_data(
-            logger=logging.getLogger("instructlab.sdg"),  # TODO: remove
+            logger=app.logger,
             api_base=endpoint_url,
             api_key=config.DEFAULT_API_KEY,
             model_family=model_family,
@@ -65,7 +68,3 @@ def generate():
     sdg(endpoint_url, model_family, num_instructions, model)
 
     return jsonify({"message": "Started generating SGD data"}), 200
-
-# if __name__ == '__main__':
-#     print("Server started!")
-#     serve(app, host="0.0.0.0", port=8080)
